@@ -1,24 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import { Outlet } from 'react-router-dom';
+import Header from './components/header/header';
+import React, { useContext, useEffect } from 'react';
+import UserProvider, { SetUserContext } from './components/context/userContext';
+import { ME_URL } from './infra/urls';
+import axios from 'axios';
+import { Stack } from '@mui/material';
 
 function App() {
+  const setUser = useContext(SetUserContext)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const meResponse = await axios.get(ME_URL)
+      setUser({
+        user: { ...meResponse.data }
+      })
+    }
+    fetchData()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Stack alignItems={"center"} paddingLeft={"5em"} paddingRight={"5em"} paddingBottom={"10em"} paddingTop={"2em"}>
+    <Header/>
+    <Outlet />
+    </Stack>
+  </> 
   );
 }
 
